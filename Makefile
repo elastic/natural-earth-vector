@@ -436,10 +436,10 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 	10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
 	10m_physical/ne_10m_coastline.shp \
 	10m_physical/ne_10m_minor_islands_coastline.shp \
-	10m_cultural/ne_10m_admin_1_states_provinces_lines_mod.shp \
+	10m_cultural_fixes/merged/ne_10m_admin_1_states_provinces_lines.shp \
 	10m_cultural/ne_10m_admin_1_seams.shp \
-	10m_cultural/ne_10m_admin_1_label_points_mod.shp \
-	10m_cultural/ne_10m_admin_1_label_points_details_mod.dbf \
+	10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp \
+	10m_cultural_fixes/merged/ne_10m_admin_1_label_points_details.dbf \
 	intermediate/ne_10m_lakes_big.shp \
 	10m_physical/ne_10m_lakes.shp
 	mapshaper -i combine-files snap \
@@ -447,30 +447,31 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 		10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
 		10m_physical/ne_10m_coastline.shp \
 		10m_physical/ne_10m_minor_islands_coastline.shp \
-		10m_cultural/ne_10m_admin_1_states_provinces_lines_mod.shp \
+		10m_cultural_fixes/merged/ne_10m_admin_1_states_provinces_lines.shp \
 		10m_cultural/ne_10m_admin_1_seams.shp \
 		-filter-fields \
 		-merge-layers \
 		-polygons gap-tolerance=1e-4 \
-		-join 10m_cultural/ne_10m_admin_1_label_points_mod.shp \
+		-join 10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp \
 		-filter 'adm0_sr !== null' + \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank_minor_islands.shp \
 		-filter 'adm0_sr <= 6' + \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank.shp \
 		-dissolve 'adm1_code' copy-fields=featurecla,scalerank \
-		-join 10m_cultural/ne_10m_admin_1_label_points_details_mod.dbf encoding=utf8 keys=adm1_code,adm1_code fields=* \
+		-join 10m_cultural_fixes/merged/ne_10m_admin_1_label_points_details.dbf encoding=utf8 keys=adm1_code,adm1_code fields=* \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces.shp \
+		-o 10m_cultural_fixes/output/ne_10m_admin_1_states_provinces.shp \
 		-erase intermediate/ne_10m_lakes_big.shp \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_lakes.shp \
 #  calc='join_count = count()'
 
-10m_cultural/ne_10m_admin_1_label_points_mod.shp: 10m_cultural/ne_10m_admin_1_label_points.shp
+10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp: 10m_cultural/ne_10m_admin_1_label_points.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_label_points
 
-10m_cultural/ne_10m_admin_1_label_points_details_mod.dbf: 10m_cultural/ne_10m_admin_1_label_points.shp
+10m_cultural_fixes/merged/ne_10m_admin_1_label_points_details.dbf: 10m_cultural/ne_10m_admin_1_label_points.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_label_points_details
 
-10m_cultural/ne_10m_admin_1_states_provinces_lines_mod.shp: 10m_cultural/ne_10m_admin_1_states_provinces_lines.shp
+10m_cultural_fixes/merged/ne_10m_admin_1_states_provinces_lines.shp: 10m_cultural/ne_10m_admin_1_states_provinces_lines.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_states_provinces_lines
 
 build_b0_ne_50m_admin_0_disputed: 50m_cultural/ne_50m_admin_0_breakaway_disputed_areas_scale_rank.shp \

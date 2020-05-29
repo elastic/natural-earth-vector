@@ -27,36 +27,55 @@ then
 fi
 
 echo "Working with $shape_file"
-# Check if there is a .filter file
-if [ -f "${shape_file}.filter" ]
-then
-    # Filter content
-    filter=$(cat "${shape_file}.filter")
-    echo "Filter to apply to original dataset:"
-    echo "${filter}"
 
-    # Initial part of the command
-    exec_command="mapshaper -i name=original ${shape_file} -filter target=original \"${filter}\" "
-
-    target="original"
-
-    # Search for _new*.shp files to include
-    count=0
-    while IFS= read -r -d '' file
-    do
-        (( count+=1 ))
-        echo "Including for processing: ${file}"
-        exec_command="${exec_command} -i name=new_${count} \"$file\""
-        target="${target},new_${count}"
-    done <   <(find . -name "${base_file}_new*.shp" -print0)
-
-    exec_command="${exec_command} -merge-layers target=\"${target}\" -o ${directory}/${base_file}_mod.shp"
-
-    eval "$exec_command"
-else
-    # Generate the new file just from the original
-    echo "No filtering file found"
+# Look for filter files
+filter_files=$(find "${directory}_fixes/updates" -name "${base_file}_new*.filter")
+if [[ -z $filter_files ]]; then 
+    echo "No filter files found, just copying original file to the output folder"
     mapshaper \
         -i name=original "${shape_file}" \
-        -o "${directory}/${base_file}_mod.shp"
+        -o "${directory}_fixes/merged/${base_file}.shp"
+    exit 0
 fi
+
+# For each filter
+#   aggregate the filter to the filter string
+#   include a merge command
+
+count=0
+exec_command="mapshaper -i name=original ${shape_file}"
+acc_filter=""
+includes_command=" "
+target="original"
+
+for file in $filter_files; do
+    (( count+=1 ))
+    
+    # Filter content
+    filter=$(cat "${file}")
+    echo "Filter to apply to original dataset:"
+    echo "${filter}"
+    if [[ -z $acc_filter ]]; then
+        acc_filter="${filter}"
+    else
+        acc_filter+=" && ${filter}"
+    fi
+
+    # Include shapefile
+    shape_file="$(echo "$file" | cut -f 1 -d '.').shp"
+
+    if [[ -f ${shape_file} ]]; then
+        name="incl_${count}"
+        includes_command+="-i name=${name} ${shape_file} "
+        target+=",${name}"
+    fi
+done
+
+# Adds the filter to the command
+exec_command+=" -filter target=original \"${acc_filter}\""
+exec_command+="${includes_command}"
+exec_command+=" -merge-layers target=\"${target}\" "
+exec_command+="-o ${directory}_fixes/merged/${base_file}.shp"
+#echo $exec_command
+eval $exec_command
+exit 0
