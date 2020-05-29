@@ -439,7 +439,7 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 	10m_cultural/ne_10m_admin_1_states_provinces_lines_mod.shp \
 	10m_cultural/ne_10m_admin_1_seams.shp \
 	10m_cultural/ne_10m_admin_1_label_points_mod.shp \
-	10m_cultural/ne_10m_admin_1_label_points_details.dbf \
+	10m_cultural/ne_10m_admin_1_label_points_details_mod.dbf \
 	intermediate/ne_10m_lakes_big.shp \
 	10m_physical/ne_10m_lakes.shp
 	mapshaper -i combine-files snap \
@@ -458,7 +458,7 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 		-filter 'adm0_sr <= 6' + \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank.shp \
 		-dissolve 'adm1_code' copy-fields=featurecla,scalerank \
-		-join 10m_cultural/ne_10m_admin_1_label_points_details.dbf encoding=utf8 keys=adm1_code,adm1_code fields=* \
+		-join 10m_cultural/ne_10m_admin_1_label_points_details_mod.dbf encoding=utf8 keys=adm1_code,adm1_code fields=* \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces.shp \
 		-erase intermediate/ne_10m_lakes_big.shp \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_lakes.shp \
@@ -466,6 +466,9 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 
 10m_cultural/ne_10m_admin_1_label_points_mod.shp: 10m_cultural/ne_10m_admin_1_label_points.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_label_points
+
+10m_cultural/ne_10m_admin_1_label_points_details_mod.dbf: 10m_cultural/ne_10m_admin_1_label_points.shp
+	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_label_points_details
 
 10m_cultural/ne_10m_admin_1_states_provinces_lines_mod.shp: 10m_cultural/ne_10m_admin_1_states_provinces_lines.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_states_provinces_lines
