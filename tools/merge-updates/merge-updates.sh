@@ -49,17 +49,23 @@ includes_command=" "
 target="original"
 
 for file in $filter_files; do
+    # echo "FILTER FILE: ${file}"
     (( count+=1 ))
     
     # Filter content
     filter=$(cat "${file}")
-    echo "Filter to apply to original dataset:"
-    echo "${filter}"
+    # echo "FILTER: ${filter}"
+
     if [[ -z $acc_filter ]]; then
         acc_filter="${filter}"
     else
-        acc_filter+=" && ${filter}"
+        if [[ ! -z ${filter} ]]; then
+            acc_filter+=" && ${filter}"
+        fi
     fi
+
+    echo "Accumulated filter to apply to original dataset:"
+    echo "${acc_filter}"
 
     # Include shapefile
     shape_file="$(echo "$file" | cut -f 1 -d '.').shp"
