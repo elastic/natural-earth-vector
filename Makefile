@@ -432,7 +432,7 @@ build_a6_ne_10m_admin_0_sov: 10m_cultural/ne_10m_admin_0_scale_rank.shp \
 		-each 'delete sr_sov_a3' \
 		-o 10m_cultural/ne_10m_admin_0_sovereignty.shp \
 
-build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp \
+build_a7_ne_10m_admin_1_all: 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp \
 	10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
 	10m_physical/ne_10m_coastline.shp \
 	10m_physical/ne_10m_minor_islands_coastline.shp \
@@ -443,7 +443,7 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 	intermediate/ne_10m_lakes_big.shp \
 	10m_physical/ne_10m_lakes.shp
 	mapshaper -i combine-files snap \
-		10m_cultural/ne_10m_admin_0_boundary_lines_land.shp \
+		10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp \
 		10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
 		10m_physical/ne_10m_coastline.shp \
 		10m_physical/ne_10m_minor_islands_coastline.shp \
@@ -454,6 +454,7 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 		-polygons gap-tolerance=1e-4 \
 		-join 10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp \
 		-filter 'adm0_sr !== null' + \
+		-simplify visvalingam interval=300 keep-shapes \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank_minor_islands.shp \
 		-filter 'adm0_sr <= 6' + \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank.shp \
@@ -464,6 +465,9 @@ build_a7_ne_10m_admin_1_all: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 		-erase intermediate/ne_10m_lakes_big.shp \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_lakes.shp \
 #  calc='join_count = count()'
+
+10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
+	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_0_boundary_lines_land
 
 10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp: 10m_cultural/ne_10m_admin_1_label_points.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_label_points
