@@ -80,8 +80,10 @@ done
 # Adds the filter to the command
 exec_command+=" -filter target=original \"${acc_filter}\""
 exec_command+="${includes_command}"
-exec_command+=" -merge-layers target=\"${target}\" "
+exec_command+=" -merge-layers force target=\"${target}\" "
 exec_command+="-o ${directory}_fixes/merged/${base_file}.shp"
-#echo $exec_command
+echo "==="
+echo $exec_command
+echo "==="
 eval $exec_command
 exit 0

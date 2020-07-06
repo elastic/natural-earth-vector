@@ -454,7 +454,7 @@ build_a7_ne_10m_admin_1_all: 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_l
 		-polygons gap-tolerance=1e-4 \
 		-join 10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp \
 		-filter 'adm0_sr !== null' + \
-		-simplify visvalingam interval=300 keep-shapes \
+		-simplify visvalingam interval=250 keep-shapes \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank_minor_islands.shp \
 		-filter 'adm0_sr <= 6' + \
 		-o 10m_cultural/ne_10m_admin_1_states_provinces_scale_rank.shp \
