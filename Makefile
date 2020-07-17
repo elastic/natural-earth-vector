@@ -351,7 +351,7 @@ build_a1_ne_10m_admin_0_scale_rank: 10m_cultural/ne_10m_admin_0_boundary_lines_l
 	10m_cultural/ne_10m_admin_0_seams.shp \
 	10m_physical/ne_10m_coastline.shp \
 	10m_physical/ne_10m_minor_islands_coastline.shp \
-	10m_cultural/ne_10m_admin_0_label_points.shp
+	10m_cultural_fixes/merged/ne_10m_admin_0_label_points.shp
 	mapshaper -i combine-files snap \
 		10m_cultural/ne_10m_admin_0_boundary_lines_land.shp \
 		10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
@@ -362,11 +362,13 @@ build_a1_ne_10m_admin_0_scale_rank: 10m_cultural/ne_10m_admin_0_boundary_lines_l
 		-filter-fields \
 		-merge-layers \
 		-polygons gap-tolerance=1e-6 \
-		-join 10m_cultural/ne_10m_admin_0_label_points.shp \
+		-join 10m_cultural_fixes/merged/ne_10m_admin_0_label_points.shp \
 		-o 10m_cultural/ne_10m_admin_0_scale_rank_minor_islands.shp \
+    -o 10m_cultural_fixes/output/ne_10m_admin_0_scale_rank_minor_islands.shp \
 		-filter 'scalerank !== null' + \
 		-filter 'scalerank <= 6' + \
 		-o 10m_cultural/ne_10m_admin_0_scale_rank.shp \
+		-o 10m_cultural_fixes/output/ne_10m_admin_0_scale_rank.shp \
 #calc='join_count = count()'
 
 build_a2_ne_10m_admin_0_disputed: 10m_cultural/ne_10m_admin_0_scale_rank_minor_islands.shp \
@@ -417,6 +419,7 @@ build_a5_ne_10m_admin_0_countries: 10m_cultural/ne_10m_admin_0_scale_rank.shp \
 		-join housekeeping/ne_admin_0_details_level_2_countries.dbf encoding=utf8 keys=sr_adm0_a3,ADM0_A3 fields=* \
 		-each 'delete sr_adm0_a3' \
 		-o 10m_cultural/ne_10m_admin_0_countries.shp \
+    -o 10m_cultural_fixes/output/ne_10m_admin_0_countries.shp \
 		-erase intermediate/ne_10m_lakes_big.shp \
 		-o 10m_cultural/ne_10m_admin_0_countries_lakes.shp \
 
@@ -468,6 +471,9 @@ build_a7_ne_10m_admin_1_all: 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_l
 
 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_0_boundary_lines_land
+
+10m_cultural_fixes/merged/ne_10m_admin_0_label_points.shp: 10m_cultural/ne_10m_admin_0_label_points.shp
+	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_0_label_points
 
 10m_cultural_fixes/merged/ne_10m_admin_1_label_points.shp: 10m_cultural/ne_10m_admin_1_label_points.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_1_label_points
