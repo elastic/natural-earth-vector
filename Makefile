@@ -436,7 +436,7 @@ build_a6_ne_10m_admin_0_sov: 10m_cultural/ne_10m_admin_0_scale_rank.shp \
 		-o 10m_cultural/ne_10m_admin_0_sovereignty.shp \
 
 build_a7_ne_10m_admin_1_all: 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp \
-	10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
+	10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_map_units.shp \
 	10m_physical/ne_10m_coastline.shp \
 	10m_physical/ne_10m_minor_islands_coastline.shp \
 	10m_cultural_fixes/merged/ne_10m_admin_1_states_provinces_lines.shp \
@@ -447,7 +447,7 @@ build_a7_ne_10m_admin_1_all: 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_l
 	10m_physical/ne_10m_lakes.shp
 	mapshaper -i combine-files snap \
 		10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp \
-		10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp \
+		10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_map_units.shp \
 		10m_physical/ne_10m_coastline.shp \
 		10m_physical/ne_10m_minor_islands_coastline.shp \
 		10m_cultural_fixes/merged/ne_10m_admin_1_states_provinces_lines.shp \
@@ -471,6 +471,9 @@ build_a7_ne_10m_admin_1_all: 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_l
 
 10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_land.shp: 10m_cultural/ne_10m_admin_0_boundary_lines_land.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_0_boundary_lines_land
+
+10m_cultural_fixes/merged/ne_10m_admin_0_boundary_lines_map_units.shp: 10m_cultural/ne_10m_admin_0_boundary_lines_map_units.shp
+	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_0_boundary_lines_map_units
 
 10m_cultural_fixes/merged/ne_10m_admin_0_label_points.shp: 10m_cultural/ne_10m_admin_0_label_points.shp
 	@bash ./tools/merge-updates/merge-updates.sh 10m_cultural ne_10m_admin_0_label_points
