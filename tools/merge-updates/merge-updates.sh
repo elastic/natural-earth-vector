@@ -64,9 +64,6 @@ for file in $filter_files; do
         fi
     fi
 
-    echo "Accumulated filter to apply to original dataset:"
-    echo "${acc_filter}"
-
     # Include shapefile
     shape_file="$(echo "$file" | cut -f 1 -d '.').shp"
 
